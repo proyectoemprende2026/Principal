@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProyectoEmprende2026 | Consultoría Integral de Fondeo</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root { --azul: #0a192f; --dorado: #d4af37; --verde: #004d40; --gris: #f4f7f6; }
+        
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--gris); scroll-behavior: smooth; }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(10, 25, 47, 0.85), rgba(10, 25, 47, 0.85)), 
+                        url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            color: white;
+            border-bottom: 5px solid var(--dorado);
+        }
+
+        .btn-gold {
+            background-color: var(--dorado);
+            color: var(--azul);
+            font-weight: bold;
+            border: none;
+            padding: 12px 30px;
+            transition: 0.3s;
+        }
+
+        .btn-gold:hover { background-color: #bfa030; transform: translateY(-3px); color: white; }
+
+        /* Services & Accompaniment */
+        .card-service {
+            border: none;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: 0.3s;
+            height: 100%;
+            background: white;
+        }
+        .card-service:hover { transform: translateY(-10px); border-bottom: 4px solid var(--verde); }
+        .icon-box { font-size: 2.5rem; color: var(--dorado); margin-bottom: 20px; }
+
+        /* FAQs Custom */
+        .accordion-button:not(.collapsed) {
+            background-color: var(--gris);
+            color: var(--azul);
+            font-weight: bold;
+        }
+
+        /* WhatsApp Floating */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25d366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            text-decoration: none;
+        }
+
+        footer { background-color: var(--azul); color: white; padding: 50px 0; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: var(--azul);">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="https://i.postimg.cc/mD8Rz90X/logotipo-fondeoemprende2026.png" alt="Logo" height="40">
+            <span class="ms-2 fw-bold d-none d-sm-inline">PROYECTO EMPRENDE 2026</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="#servicios">Servicios</a></li>
+                <li class="nav-item"><a class="nav-link" href="#acompañamiento">Acompañamiento</a></li>
+                <li class="nav-item"><a class="nav-link" href="#faq">Ayuda</a></li>
+                <li class="nav-item ms-lg-3">
+                    <a class="btn btn-gold btn-sm" href="https://proyectoemprende2026.github.io/Plataforma/">ACCESO PLATAFORMA</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="hero text-center text-lg-start">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <h1 class="display-4 fw-bold mb-4">Soluciones de Fondeo con Respaldo Consultor Especializado</h1>
+                <p class="lead mb-5">Más que una plataforma, somos su aliado estratégico en la gestión de capital internacional y blindaje fiscal corporativo.</p>
+                <div class="d-grid gap-3 d-sm-flex justify-content-lg-start">
+                    <a href="https://proyectoemprende2026.github.io/Plataforma/" class="btn btn-gold btn-lg">Acceder a mi Dashboard</a>
+                    <a href="https://wa.me/522215736092" class="btn btn-outline-light btn-lg">Contactar Asesor</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="acompañamiento" class="py-5" style="background: white;">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-5 mb-4 mb-lg-0 text-center">
+                <img src="https://i.postimg.cc/mD8Rz90X/logotipo-fondeoemprende2026.png" class="img-fluid rounded" style="max-height: 350px;" alt="Acompañamiento">
+            </div>
+            <div class="col-lg-7">
+                <h2 class="fw-bold mb-4">Acompañamiento Fiscal y Administrativo</h2>
+                <p class="text-muted fs-5">En <strong>ProyectoEmprende2026</strong>, no solo facilitamos el acceso a recursos. Nuestro equipo de consultores le guía en cada paso para asegurar que su empresa cumpla con los estándares internacionales.</p>
+                <div class="row mt-4">
+                    <div class="col-sm-6 mb-3">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-user-tie text-success fs-4 me-3"></i>
+                            <div>
+                                <h6>Asesoría Personalizada</h6>
+                                <p class="small text-muted">Sesiones de seguimiento para la correcta ejecución del presupuesto.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-file-signature text-success fs-4 me-3"></i>
+                            <div>
+                                <h6>Blindaje Fiscal</h6>
+                                <p class="small text-muted">Validación técnica de cada comprobante para evitar discrepancias ante el SAT.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="faq" class="py-5" style="background-color: #f0f2f5;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Preguntas Frecuentes</h2>
+            <p class="text-muted">Todo lo que necesita saber sobre el manejo de su fondo</p>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <div class="accordion shadow-sm" id="accordionFAQ">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#f1">
+                                ¿Cómo obtengo mi PIN de acceso?
+                            </button>
+                        </h2>
+                        <div id="f1" class="accordion-collapse collapse show" data-bs-parent="#accordionFAQ">
+                            <div class="accordion-body">
+                                El PIN se genera automáticamente al completar su registro inicial en la plataforma. Es un código único de 4 dígitos.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#f2">
+                                ¿Qué pasa si pierdo mi PIN o código QR?
+                            </button>
+                        </h2>
+                        <div id="f2" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+                            <div class="accordion-body">
+                                Por seguridad, el PIN es privado. Si lo pierde, debe contactar a su asesor asignado al <strong>2211094255</strong> con sus datos de registro para solicitar una restauración de acceso manual.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#f3">
+                                ¿Qué tipo de archivos puedo subir como comprobantes?
+                            </button>
+                        </h2>
+                        <div id="f3" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+                            <div class="accordion-body">
+                                Aceptamos enlaces de <strong>Google Drive o Dropbox</strong> que contengan facturas en formato PDF y XML. Asegúrese de que el enlace sea "Público" o compartido para "Cualquiera con el enlace".
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contacto" class="py-5">
+    <div class="container text-center py-5">
+        <h3 class="fw-bold mb-4">¿Listo para iniciar?</h3>
+        <p class="text-muted mb-5">Nuestros consultores están listos para atenderle en tiempo real.</p>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-3">
+                <div class="p-3 border rounded bg-white">
+                    <i class="fas fa-phone text-primary mb-2"></i>
+                    <p class="mb-0 small">2211094255</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 border rounded bg-white">
+                    <i class="fab fa-whatsapp text-success mb-2"></i>
+                    <p class="mb-0 small">2215736092</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 border rounded bg-white">
+                    <i class="fas fa-envelope text-danger mb-2"></i>
+                    <p class="mb-0 small">proyectoemprende2026@gmail.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container text-center">
+        <p class="mb-0">&copy; 2026 Despacho Consultor ProyectoEmprende2026.</p>
+        <small class="text-muted">Servicios de consultoría financiera de alto nivel.</small>
+    </div>
+</footer>
+
+<a href="https://wa.me/522215736092" class="whatsapp-float" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
