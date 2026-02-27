@@ -301,6 +301,9 @@
             font-size: 12.5px;
             font-family: 'DM Sans', sans-serif;
             white-space: nowrap;
+            max-width: calc(100vw - 100px);
+            overflow: hidden;
+            text-overflow: ellipsis;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             border: 1px solid rgba(212,175,55,0.3);
             animation: fadeInTooltip 0.4s ease 1.5s both;
@@ -308,9 +311,80 @@
         }
         @keyframes fadeInTooltip { from{opacity:0;transform:translateX(10px)} to{opacity:1;transform:translateX(0)} }
 
-        @media (max-width: 420px) {
-            :root { --chat-width: calc(100vw - 24px); --chat-height: 70vh; }
-            #chat-window { border-radius: 16px; }
+        /* ===== RESPONSIVIDAD ===== */
+
+        /* Hero responsive */
+        @media (max-width: 991px) {
+            .hero {
+                height: auto;
+                min-height: 80vh;
+                padding: 80px 0 60px;
+                text-align: center;
+            }
+            .hero .display-4 { font-size: 2rem; }
+            .hero .lead { font-size: 1rem; }
+            .hero .d-sm-flex { justify-content: center; }
+        }
+
+        @media (max-width: 576px) {
+            .hero { min-height: 100svh; padding: 70px 0 50px; }
+            .hero .display-4 { font-size: 1.65rem; line-height: 1.2; }
+            .hero .btn { width: 100%; text-align: center; }
+            .hero .d-grid { gap: 12px !important; }
+        }
+
+        /* Section responsive */
+        @media (max-width: 767px) {
+            .section-title { font-size: 1.6rem; }
+            section.py-5 { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
+            .container.py-5 { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
+        }
+
+        /* Navbar mobile */
+        @media (max-width: 575px) {
+            .navbar-brand span { font-size: 0.85rem; }
+            .navbar-brand img { height: 42px; }
+        }
+
+        /* Accordion readable on small screens */
+        @media (max-width: 576px) {
+            .accordion-body { font-size: 0.9rem; }
+        }
+
+        /* ===== CHATBOT MOBILE ===== */
+        @media (max-width: 500px) {
+            :root {
+                --chat-width: calc(100vw - 20px);
+                --chat-height: 72svh;
+            }
+            #chat-bubble {
+                bottom: 16px;
+                right: 10px;
+            }
+            #chat-window {
+                border-radius: 16px;
+                /* Snap to left edge on small screens */
+                margin-right: 0;
+            }
+            #chat-toggle {
+                width: 54px;
+                height: 54px;
+                font-size: 22px;
+            }
+            #chat-tooltip {
+                font-size: 11.5px;
+                padding: 7px 12px;
+            }
+            .msg { font-size: 13px; }
+            .opt-btn { font-size: 11.5px; padding: 5px 10px; }
+            #chat-input { font-size: 13px; padding: 8px 14px; }
+        }
+
+        /* Extra small fix: chat window never goes off-screen */
+        @media (max-width: 380px) {
+            :root { --chat-height: 68svh; }
+            .chat-header-info h6 { font-size: 12.5px; }
+            .chat-header-info small { font-size: 10px; }
         }
     </style>
 </head>
@@ -331,7 +405,7 @@
                 <li class="nav-item"><a class="nav-link" href="#acompañamiento">Acompañamiento</a></li>
                 <li class="nav-item"><a class="nav-link" href="#faq">Preguntas</a></li>
                 <li class="nav-item ms-lg-3">
-                    <a class="btn btn-gold btn-sm" href="https://proyectoemprende2026.github.io/Plataformac/">ACCESO PLATAFORMA</a>
+                    <a class="btn btn-gold btn-sm" href="https://proyectoemprende2026.github.io/Plataformac/" target="_blank">ACCESO PLATAFORMA</a>
                 </li>
             </ul>
         </div>
@@ -346,7 +420,7 @@
                 <h1 class="display-4 fw-bold mb-4" style="font-family:'Playfair Display',serif;">Gestión de Fondeo Internacional con Respaldo Consultor</h1>
                 <p class="lead mb-5">En <strong>FondeoEmprende2026</strong>, transformamos la recepción de capital en una estructura financiera sólida, transparente y libre de riesgos fiscales.</p>
                 <div class="d-grid gap-3 d-sm-flex">
-                    <a href="https://proyectoemprende2026.github.io/Plataformac/" class="btn btn-gold btn-lg">Acceder a mi Dashboard</a>
+                    <a href="https://proyectoemprende2026.github.io/Plataformac/" target="_blank" class="btn btn-gold btn-lg">Acceder a mi Dashboard</a>
                     <a href="https://wa.me/522215736092" class="btn btn-outline-light btn-lg">Contactar Consultor</a>
                 </div>
             </div>
@@ -500,11 +574,11 @@ const KB = {
         opts: ['Soy nuevo — quiero registrarme', 'Ya tengo NIP — quiero acceder', '¿Qué son los fondos a fondo perdido?', 'Comprobación de gastos', 'Problema técnico']
     },
     nuevo: {
-        text: `¡Bienvenido! Para registrarte en la plataforma sigue estos pasos:\n\n1️⃣ Haz clic en <strong>"ACCESO PLATAFORMA"</strong> en el menú superior.\n2️⃣ Selecciona <strong>Nuevo registro</strong> y completa tus datos.\n3️⃣ Al finalizar recibirás un <strong>PIN de 4 dígitos</strong> y un <strong>código QR único</strong>.\n\n⚠️ Guarda tu PIN en un lugar seguro, está encriptado y no puede recuperarse sin soporte.`,
+        text: `¡Bienvenido! Para registrarte en la plataforma sigue estos pasos:\n\n1️⃣ Accede aquí: <a href="https://proyectoemprende2026.github.io/Plataformac/" target="_blank" style="color:var(--dorado-claro)">Abrir Plataforma →</a>\n2️⃣ Selecciona <strong>Nuevo registro</strong> y completa tus datos.\n3️⃣ Al finalizar recibirás un <strong>PIN de 4 dígitos</strong> y un <strong>código QR único</strong>.\n\n⚠️ Guarda tu PIN en un lugar seguro, está encriptado y no puede recuperarse sin soporte.`,
         opts: ['¿Qué documentos necesito?', '¿Qué son los fondos a fondo perdido?', 'Volver al inicio']
     },
     nip: {
-        text: `Para ingresar con tu NIP:\n\n1️⃣ Entra a la <strong>Plataforma</strong> desde el botón del menú.\n2️⃣ Ingresa tu <strong>PIN de 4 dígitos</strong> en el acceso directo.\n3️⃣ Confirma con tu <strong>código QR</strong> si el sistema lo solicita.\n\n¿Perdiste tu PIN? Llama al <strong>2211094255</strong> para que soporte valide tu identidad y te lo restaure.`,
+        text: `Para ingresar con tu NIP:\n\n1️⃣ Entra a la plataforma: <a href="https://proyectoemprende2026.github.io/Plataformac/" target="_blank" style="color:var(--dorado-claro)">Abrir Plataforma →</a>\n2️⃣ Ingresa tu <strong>PIN de 4 dígitos</strong> en el acceso directo.\n3️⃣ Confirma con tu <strong>código QR</strong> si el sistema lo solicita.\n\n¿Perdiste tu PIN? Llama al <strong>2211094255</strong> para que soporte valide tu identidad y te lo restaure.`,
         opts: ['Perdí mi PIN', 'Reportar otro problema', 'Volver al inicio']
     },
     pin_perdido: {
