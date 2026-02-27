@@ -7,13 +7,29 @@
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        :root { --azul: #0a192f; --dorado: #d4af37; --verde: #004d40; --gris: #f4f7f6; }
+        :root {
+            --azul: #0a192f;
+            --dorado: #d4af37;
+            --dorado-claro: #f0d060;
+            --verde: #004d40;
+            --gris: #f4f7f6;
+            --chat-bg: #0d1f36;
+            --chat-accent: #d4af37;
+            --chat-user: #1a3a5c;
+            --chat-bot: #162640;
+            --chat-width: 370px;
+            --chat-height: 560px;
+        }
         
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--gris); scroll-behavior: smooth; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--gris);
+            scroll-behavior: smooth;
+        }
 
-        /* Navbar Styling */
         .navbar-brand img { 
             height: 55px; 
             background: white; 
@@ -22,7 +38,6 @@
             box-shadow: 0 0 10px rgba(255,255,255,0.2);
         }
 
-        /* Hero Section */
         .hero {
             background: linear-gradient(rgba(10, 25, 47, 0.88), rgba(10, 25, 47, 0.88)), 
                         url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1350&q=80');
@@ -45,8 +60,7 @@
         }
         .btn-gold:hover { background-color: #bfa030; transform: translateY(-3px); color: white; }
 
-        /* Sections */
-        .section-title { font-weight: 800; color: var(--azul); margin-bottom: 30px; }
+        .section-title { font-weight: 800; color: var(--azul); margin-bottom: 30px; font-family: 'Playfair Display', serif; }
         .card-service {
             border: none; border-radius: 15px; padding: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
@@ -54,24 +68,255 @@
         }
         .card-service:hover { transform: translateY(-5px); border-bottom: 4px solid var(--dorado); }
 
-        /* Accordion */
         .accordion-button:not(.collapsed) { background-color: #e9ecef; color: var(--azul); font-weight: bold; }
 
-        /* WhatsApp */
-        .whatsapp-float {
-            position: fixed; bottom: 20px; right: 20px;
-            background-color: #25d366; color: white;
-            width: 60px; height: 60px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 30px; z-index: 1000; text-decoration: none;
-            box-shadow: 2px 2px 15px rgba(0,0,0,0.3);
+        footer { background-color: var(--azul); color: white; padding: 40px 0; border-top: 3px solid var(--dorado); }
+
+        /* ===== CHATBOT ===== */
+        #chat-bubble {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
         }
 
-        footer { background-color: var(--azul); color: white; padding: 40px 0; border-top: 3px solid var(--dorado); }
+        #chat-toggle {
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--dorado), #b8962e);
+            color: var(--azul);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 6px 24px rgba(212,175,55,0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        #chat-toggle:hover { transform: scale(1.08); box-shadow: 0 8px 32px rgba(212,175,55,0.6); }
+        #chat-toggle .chat-icon-open  { transition: opacity 0.2s, transform 0.2s; }
+        #chat-toggle .chat-icon-close { position: absolute; opacity: 0; transform: rotate(-90deg); transition: opacity 0.2s, transform 0.2s; }
+        #chat-bubble.open #chat-toggle .chat-icon-open  { opacity: 0; transform: rotate(90deg); }
+        #chat-bubble.open #chat-toggle .chat-icon-close { opacity: 1; transform: rotate(0deg); }
+
+        #chat-badge {
+            position: absolute;
+            top: -4px; right: -4px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px; height: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid white;
+            animation: pulse-badge 1.8s infinite;
+        }
+        @keyframes pulse-badge { 0%,100%{transform:scale(1)} 50%{transform:scale(1.2)} }
+
+        #chat-window {
+            width: var(--chat-width);
+            height: var(--chat-height);
+            background: var(--chat-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(212,175,55,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: scale(0.85) translateY(20px);
+            transform-origin: bottom right;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s ease;
+        }
+        #chat-bubble.open #chat-window {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Header */
+        .chat-header {
+            background: linear-gradient(135deg, #0d1f36, #152a45);
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid rgba(212,175,55,0.3);
+            flex-shrink: 0;
+        }
+        .chat-avatar {
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--dorado), #8a6a10);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+            color: white;
+            flex-shrink: 0;
+        }
+        .chat-header-info h6 { margin: 0; color: var(--dorado); font-weight: 700; font-size: 14px; font-family: 'Playfair Display', serif; }
+        .chat-header-info small { color: #8aa0bb; font-size: 11px; }
+        .chat-status-dot {
+            width: 8px; height: 8px;
+            background: #2ecc71;
+            border-radius: 50%;
+            margin-left: auto;
+            box-shadow: 0 0 6px #2ecc71;
+            animation: pulse-green 2s infinite;
+        }
+        @keyframes pulse-green { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+        /* Messages */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            scroll-behavior: smooth;
+        }
+        .chat-messages::-webkit-scrollbar { width: 4px; }
+        .chat-messages::-webkit-scrollbar-track { background: transparent; }
+        .chat-messages::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.3); border-radius: 4px; }
+
+        .msg {
+            max-width: 88%;
+            padding: 10px 14px;
+            border-radius: 16px;
+            font-size: 13.5px;
+            line-height: 1.55;
+            animation: msg-in 0.25s ease;
+        }
+        @keyframes msg-in { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+        .msg.bot {
+            background: var(--chat-bot);
+            color: #cfe0f5;
+            border-top-left-radius: 4px;
+            align-self: flex-start;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .msg.bot strong { color: var(--dorado-claro); }
+
+        .msg.user {
+            background: linear-gradient(135deg, var(--chat-user), #1e4a77);
+            color: white;
+            border-top-right-radius: 4px;
+            align-self: flex-end;
+        }
+
+        /* Quick options */
+        .chat-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            padding: 0 14px 8px;
+        }
+        .opt-btn {
+            background: transparent;
+            border: 1.5px solid rgba(212,175,55,0.5);
+            color: var(--dorado-claro);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+        }
+        .opt-btn:hover {
+            background: rgba(212,175,55,0.15);
+            border-color: var(--dorado);
+            transform: translateY(-1px);
+        }
+
+        /* Input */
+        .chat-input-area {
+            padding: 12px 14px;
+            display: flex;
+            gap: 8px;
+            border-top: 1px solid rgba(255,255,255,0.07);
+            background: rgba(255,255,255,0.03);
+            flex-shrink: 0;
+        }
+        #chat-input {
+            flex: 1;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(212,175,55,0.2);
+            color: white;
+            border-radius: 24px;
+            padding: 9px 16px;
+            font-size: 13px;
+            outline: none;
+            font-family: 'DM Sans', sans-serif;
+            transition: border-color 0.2s;
+        }
+        #chat-input::placeholder { color: #5a7a9a; }
+        #chat-input:focus { border-color: rgba(212,175,55,0.6); background: rgba(255,255,255,0.1); }
+        #chat-send {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--dorado), #a87c10);
+            border: none;
+            color: var(--azul);
+            cursor: pointer;
+            font-size: 14px;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+        }
+        #chat-send:hover { transform: scale(1.1); }
+
+        /* Typing indicator */
+        .typing-indicator {
+            display: flex; gap: 5px; align-items: center;
+            padding: 10px 14px;
+            align-self: flex-start;
+        }
+        .typing-indicator span {
+            width: 7px; height: 7px;
+            background: var(--dorado);
+            border-radius: 50%;
+            animation: typing 1.2s infinite;
+            opacity: 0.6;
+        }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing { 0%,80%,100%{transform:scale(1)} 40%{transform:scale(1.4);opacity:1} }
+
+        /* Tooltip burbuja */
+        #chat-tooltip {
+            background: var(--azul);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 12.5px;
+            font-family: 'DM Sans', sans-serif;
+            white-space: nowrap;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border: 1px solid rgba(212,175,55,0.3);
+            animation: fadeInTooltip 0.4s ease 1.5s both;
+            cursor: pointer;
+        }
+        @keyframes fadeInTooltip { from{opacity:0;transform:translateX(10px)} to{opacity:1;transform:translateX(0)} }
+
+        @media (max-width: 420px) {
+            :root { --chat-width: calc(100vw - 24px); --chat-height: 70vh; }
+            #chat-window { border-radius: 16px; }
+        }
     </style>
 </head>
 <body>
 
+<!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: var(--azul);">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="#">
@@ -93,11 +338,12 @@
     </div>
 </nav>
 
+<!-- HERO -->
 <section class="hero text-center text-lg-start">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-7">
-                <h1 class="display-4 fw-bold mb-4">Gestión de Fondeo Internacional con Respaldo Consultor</h1>
+                <h1 class="display-4 fw-bold mb-4" style="font-family:'Playfair Display',serif;">Gestión de Fondeo Internacional con Respaldo Consultor</h1>
                 <p class="lead mb-5">En <strong>FondeoEmprende2026</strong>, transformamos la recepción de capital en una estructura financiera sólida, transparente y libre de riesgos fiscales.</p>
                 <div class="d-grid gap-3 d-sm-flex">
                     <a href="https://proyectoemprende2026.github.io/Plataformac/" class="btn btn-gold btn-lg">Acceder a mi Dashboard</a>
@@ -108,6 +354,7 @@
     </div>
 </section>
 
+<!-- ACOMPAÑAMIENTO -->
 <section id="acompañamiento" class="py-5 bg-white">
     <div class="container py-5">
         <div class="row align-items-center">
@@ -136,10 +383,11 @@
     </div>
 </section>
 
+<!-- FAQ -->
 <section id="faq" class="py-5" style="background-color: #f0f2f5;">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="fw-bold">Centro de Ayuda</h2>
+            <h2 class="fw-bold" style="font-family:'Playfair Display',serif;">Centro de Ayuda</h2>
             <p class="text-muted">Resolución rápida de dudas operativas</p>
         </div>
         <div class="row justify-content-center">
@@ -195,10 +443,243 @@
     </div>
 </footer>
 
-<a href="https://wa.me/522215736092" class="whatsapp-float" target="_blank">
-    <i class="fab fa-whatsapp"></i>
-</a>
+<!-- ===== CHATBOT FLOTANTE ===== -->
+<div id="chat-bubble">
+    <span id="chat-tooltip" onclick="toggleChat()">💬 ¿Necesitas orientación?</span>
+
+    <div id="chat-window">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="chat-avatar">🤖</div>
+            <div class="chat-header-info">
+                <h6>Asistente FondeoEmprende</h6>
+                <small>Orientación fiscal y de plataforma</small>
+            </div>
+            <div class="chat-status-dot"></div>
+        </div>
+
+        <!-- Messages -->
+        <div class="chat-messages" id="chat-messages"></div>
+
+        <!-- Quick options -->
+        <div class="chat-options" id="chat-options"></div>
+
+        <!-- Input -->
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Escribe tu pregunta..." maxlength="200" />
+            <button id="chat-send" onclick="sendUserMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <button id="chat-toggle" onclick="toggleChat()">
+        <i class="fas fa-robot chat-icon-open"></i>
+        <i class="fas fa-times chat-icon-close"></i>
+        <span id="chat-badge">1</span>
+    </button>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ===== CHATBOT ENGINE =====
+const messagesEl = document.getElementById('chat-messages');
+const optionsEl  = document.getElementById('chat-options');
+const inputEl    = document.getElementById('chat-input');
+const bubbleEl   = document.getElementById('chat-bubble');
+const badgeEl    = document.getElementById('chat-badge');
+const tooltipEl  = document.getElementById('chat-tooltip');
+
+let chatOpen = false;
+let badgeHidden = false;
+
+// Knowledge base
+const KB = {
+    bienvenida: {
+        text: `¡Hola! Soy tu asistente de <strong>FondeoEmprende2026</strong>. 👋\n\n¿Cómo puedo orientarte hoy?`,
+        opts: ['Soy nuevo — quiero registrarme', 'Ya tengo NIP — quiero acceder', '¿Qué son los fondos a fondo perdido?', 'Comprobación de gastos', 'Problema técnico']
+    },
+    nuevo: {
+        text: `¡Bienvenido! Para registrarte en la plataforma sigue estos pasos:\n\n1️⃣ Haz clic en <strong>"ACCESO PLATAFORMA"</strong> en el menú superior.\n2️⃣ Selecciona <strong>Nuevo registro</strong> y completa tus datos.\n3️⃣ Al finalizar recibirás un <strong>PIN de 4 dígitos</strong> y un <strong>código QR único</strong>.\n\n⚠️ Guarda tu PIN en un lugar seguro, está encriptado y no puede recuperarse sin soporte.`,
+        opts: ['¿Qué documentos necesito?', '¿Qué son los fondos a fondo perdido?', 'Volver al inicio']
+    },
+    nip: {
+        text: `Para ingresar con tu NIP:\n\n1️⃣ Entra a la <strong>Plataforma</strong> desde el botón del menú.\n2️⃣ Ingresa tu <strong>PIN de 4 dígitos</strong> en el acceso directo.\n3️⃣ Confirma con tu <strong>código QR</strong> si el sistema lo solicita.\n\n¿Perdiste tu PIN? Llama al <strong>2211094255</strong> para que soporte valide tu identidad y te lo restaure.`,
+        opts: ['Perdí mi PIN', 'Reportar otro problema', 'Volver al inicio']
+    },
+    pin_perdido: {
+        text: `Sin problema. Para recuperar tu PIN:\n\n📞 Llama al número de soporte técnico: <strong>2211094255</strong>\n\nEl equipo validará tu identidad con los datos de tu registro original. Ten a la mano:\n• Tu nombre completo registrado\n• El proyecto o folio de fondeo asociado\n\nEl PIN no puede verse ni recuperarse desde el sistema por seguridad.`,
+        opts: ['Volver al inicio', 'Contactar por WhatsApp']
+    },
+    fondos: {
+        text: `💡 <strong>¿Qué son los fondos internacionales a fondo perdido?</strong>\n\nSon recursos económicos otorgados por organismos internacionales (BID, Banco Mundial, fundaciones, etc.) que <strong>no requieren devolución</strong>, siempre que se cumplan las condiciones establecidas.\n\n<strong>¿Cuáles son esas condiciones?</strong>\n• Ejecutar el proyecto conforme al plan aprobado\n• Comprobar cada gasto con facturación oficial\n• Presentar informes periódicos al organismo otorgante\n• Evitar desvíos de recursos`,
+        opts: ['¿Cómo accedo a uno?', 'Requisitos para México', 'Comprobación de gastos', 'Implicaciones fiscales (SAT)', 'Volver al inicio']
+    },
+    acceso_fondos: {
+        text: `🌐 <strong>¿Cómo se accede a fondos a fondo perdido?</strong>\n\nEl proceso típico es:\n\n1. <strong>Identificar la convocatoria</strong> adecuada al giro y tamaño del proyecto.\n2. <strong>Elaborar un plan de negocio</strong> con presupuesto detallado.\n3. <strong>Presentar solicitud</strong> ante el organismo o su representante en México.\n4. <strong>Firma del convenio</strong> de uso y comprobación.\n5. <strong>Recepción y ejecución</strong> del recurso con acompañamiento como el de FondeoEmprende2026.`,
+        opts: ['Requisitos para México', 'Comprobación de gastos', 'Volver al inicio']
+    },
+    requisitos: {
+        text: `📋 <strong>Requisitos generales para acceder en México</strong>\n\n• Ser persona moral o física con actividad empresarial\n• RFC activo y sin adeudos ante el <strong>SAT</strong>\n• Proyecto con impacto social, ambiental o productivo demostrable\n• Estados financieros de los últimos 2 ejercicios\n• Plan de trabajo con metas medibles\n• Apertura de cuenta bancaria exclusiva para el proyecto\n\n⚠️ Cada convocatoria puede agregar requisitos específicos.`,
+        opts: ['Comprobación de gastos', 'Implicaciones fiscales (SAT)', 'Volver al inicio']
+    },
+    comprobacion: {
+        text: `📂 <strong>Comprobación de gastos del fondo</strong>\n\nEn la plataforma, cada gasto debe respaldarse así:\n\n1. <strong>Factura CFDI</strong> (XML + PDF) del proveedor.\n2. Subir los archivos a <strong>Google Drive</strong> con acceso público ("Cualquier persona con el enlace puede ver").\n3. Pegar el enlace en el módulo de comprobantes de tu dashboard.\n4. Nuestro equipo valida la autenticidad del XML ante el SAT.\n\n✅ Solo comprobantes con XML válido son aceptados como gasto elegible.`,
+        opts: ['Implicaciones fiscales (SAT)', '¿Qué gastos son elegibles?', 'Volver al inicio']
+    },
+    fiscal: {
+        text: `⚖️ <strong>Implicaciones fiscales ante el SAT</strong>\n\nRecibir fondos internacionales genera obligaciones fiscales:\n\n• Los recursos pueden clasificarse como <strong>ingresos acumulables</strong> si no se estructura correctamente.\n• FondeoEmprende2026 aplica una estrategia de <strong>blindaje fiscal preventivo</strong> para evitar discrepancias.\n• Se documentan los fondos como <strong>aportaciones no reembolsables</strong> con respaldo del convenio internacional.\n• Los gastos comprobados con CFDI son 100% deducibles.\n\n💡 Recomendamos no mezclar los recursos del fondo con cuentas de operación habitual.`,
+        opts: ['Comprobación de gastos', '¿Qué gastos son elegibles?', 'Volver al inicio']
+    },
+    elegibles: {
+        text: `✅ <strong>Gastos elegibles (los más comunes)</strong>\n\n• Adquisición de maquinaria o equipo productivo\n• Pago de servicios profesionales especializados\n• Capacitación y desarrollo del equipo\n• Tecnología y software con factura\n• Infraestructura física vinculada al proyecto\n\n❌ <strong>Gastos NO elegibles:</strong>\n• Sueldos o nómina regular\n• Gastos de representación sin justificación\n• Compras sin factura CFDI válida\n• Pagos a empresas sin actividad real (EFOS)`,
+        opts: ['Comprobación de gastos', 'Implicaciones fiscales (SAT)', 'Volver al inicio']
+    },
+    documentos: {
+        text: `📎 <strong>Documentos clave para tu registro</strong>\n\n• Identificación oficial vigente\n• RFC con homoclave\n• Comprobante de domicilio reciente\n• Número de folio o convenio de fondeo (si ya lo tienes)\n• Correo electrónico activo\n\nSi aún no cuentas con tu convenio, puedes registrarte de manera preventiva y completarlo después.`,
+        opts: ['Soy nuevo — quiero registrarme', 'Volver al inicio']
+    },
+    tecnico: {
+        text: `🔧 <strong>Problemas técnicos</strong>\n\nPara cualquier falla en la plataforma:\n\n📞 <strong>Soporte:</strong> 2211094255\n💬 <strong>WhatsApp:</strong> 2215736092\n\nTen a la mano una descripción del error o captura de pantalla. El equipo responde en horario hábil (Lun–Vie 9–18h).`,
+        opts: ['Contactar por WhatsApp', 'Volver al inicio']
+    },
+    whatsapp: {
+        text: `📲 Puedes contactar directamente a un consultor por WhatsApp:\n\n👉 <a href="https://wa.me/522215736092" target="_blank" style="color:var(--dorado-claro)">Abrir WhatsApp — 2215736092</a>\n\nTe atenderá un asesor especializado en fondos internacionales y comprobación fiscal.`,
+        opts: ['Volver al inicio']
+    },
+    inicio: null // handled in code
+};
+
+const intents = {
+    'Soy nuevo — quiero registrarme': 'nuevo',
+    'Ya tengo NIP — quiero acceder': 'nip',
+    '¿Qué son los fondos a fondo perdido?': 'fondos',
+    'Comprobación de gastos': 'comprobacion',
+    'Problema técnico': 'tecnico',
+    'Perdí mi PIN': 'pin_perdido',
+    'Reportar otro problema': 'tecnico',
+    '¿Cómo accedo a uno?': 'acceso_fondos',
+    'Requisitos para México': 'requisitos',
+    'Implicaciones fiscales (SAT)': 'fiscal',
+    '¿Qué gastos son elegibles?': 'elegibles',
+    '¿Qué documentos necesito?': 'documentos',
+    'Contactar por WhatsApp': 'whatsapp',
+    'Volver al inicio': 'bienvenida',
+};
+
+// NLP ligero
+function detectIntent(text) {
+    const t = text.toLowerCase();
+    if (/nip|pin|contraseña|acceder|acceso/.test(t)) return 'nip';
+    if (/registro|nuevo|primera vez|registrar/.test(t)) return 'nuevo';
+    if (/fondo perdido|fondos internacionales|qué son|grant/.test(t)) return 'fondos';
+    if (/comprobar|comprobación|factura|cfdi|drive|xml/.test(t)) return 'comprobacion';
+    if (/sat|fiscal|impuesto|deducible|acumulable/.test(t)) return 'fiscal';
+    if (/requisito|documento|necesito/.test(t)) return 'requisitos';
+    if (/elegible|gasto permitido|qué puedo/.test(t)) return 'elegibles';
+    if (/perdí|olvidé|no recuerdo|recuperar/.test(t)) return 'pin_perdido';
+    if (/whatsapp|contacto|teléfono|llamar/.test(t)) return 'whatsapp';
+    if (/error|falla|problema|técnico/.test(t)) return 'tecnico';
+    if (/cómo accedo|obtener fondo|solicitar/.test(t)) return 'acceso_fondos';
+    return null;
+}
+
+function addMsg(text, role) {
+    const div = document.createElement('div');
+    div.className = `msg ${role}`;
+    div.innerHTML = text.replace(/\n/g, '<br>');
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function showTyping() {
+    const t = document.createElement('div');
+    t.className = 'typing-indicator';
+    t.id = 'typing';
+    t.innerHTML = '<span></span><span></span><span></span>';
+    messagesEl.appendChild(t);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function removeTyping() {
+    const t = document.getElementById('typing');
+    if (t) t.remove();
+}
+
+function setOptions(opts) {
+    optionsEl.innerHTML = '';
+    if (!opts) return;
+    opts.forEach(o => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        btn.textContent = o;
+        btn.onclick = () => handleOption(o);
+        optionsEl.appendChild(btn);
+    });
+}
+
+function handleOption(label) {
+    addMsg(label, 'user');
+    setOptions([]);
+    const key = intents[label];
+    if (!key) return;
+    respond(key);
+}
+
+function respond(key) {
+    showTyping();
+    setTimeout(() => {
+        removeTyping();
+        const entry = KB[key];
+        if (!entry) { respond('bienvenida'); return; }
+        addMsg(entry.text, 'bot');
+        setOptions(entry.opts || []);
+    }, 700 + Math.random() * 400);
+}
+
+function sendUserMessage() {
+    const text = inputEl.value.trim();
+    if (!text) return;
+    addMsg(text, 'user');
+    inputEl.value = '';
+    setOptions([]);
+    const intent = detectIntent(text);
+    showTyping();
+    setTimeout(() => {
+        removeTyping();
+        if (intent && KB[intent]) {
+            addMsg(KB[intent].text, 'bot');
+            setOptions(KB[intent].opts || []);
+        } else {
+            addMsg(`Entiendo tu pregunta. Para darte la mejor orientación, elige una de las opciones o contáctanos directamente:\n\n📞 <strong>2211094255</strong> | 💬 WhatsApp: <strong>2215736092</strong>`, 'bot');
+            setOptions(['¿Qué son los fondos a fondo perdido?', 'Comprobación de gastos', 'Contactar por WhatsApp', 'Volver al inicio']);
+        }
+    }, 800);
+}
+
+function toggleChat() {
+    chatOpen = !chatOpen;
+    bubbleEl.classList.toggle('open', chatOpen);
+
+    if (chatOpen && !badgeHidden) {
+        badgeEl.style.display = 'none';
+        tooltipEl.style.display = 'none';
+        badgeHidden = true;
+        // Greet
+        setTimeout(() => {
+            addMsg(KB.bienvenida.text, 'bot');
+            setOptions(KB.bienvenida.opts);
+        }, 300);
+    }
+}
+
+// Enter key
+inputEl.addEventListener('keydown', e => { if (e.key === 'Enter') sendUserMessage(); });
+
+// Auto-hide tooltip after 8s
+setTimeout(() => {
+    if (tooltipEl) tooltipEl.style.display = 'none';
+}, 8000);
+</script>
 </body>
 </html>
